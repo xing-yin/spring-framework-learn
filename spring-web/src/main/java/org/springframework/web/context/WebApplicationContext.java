@@ -16,14 +16,15 @@
 
 package org.springframework.web.context;
 
-import javax.servlet.ServletContext;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.lang.Nullable;
+
+import javax.servlet.ServletContext;
 
 /**
  * Interface to provide configuration for a web application. This is read-only while
  * the application is running, but may be reloaded if the implementation supports this.
+ * 提供给 web 应用配置的接口。在应用运行中只读，但是如果实现支持的话也可以重新加载。
  *
  * <p>This interface adds a {@code getServletContext()} method to the generic
  * ApplicationContext interface, and defines a well-known application attribute name
