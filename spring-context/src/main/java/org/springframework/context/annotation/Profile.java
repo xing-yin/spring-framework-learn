@@ -16,19 +16,16 @@
 
 package org.springframework.context.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Profiles;
 
+import java.lang.annotation.*;
+
 /**
  * Indicates that a component is eligible for registration when one or more
  * {@linkplain #value specified profiles} are active.
+ * 指示当一个或多个{@linkplain #value 指定的配置文件}有效时，组件就可以进行注册
  *
  * <p>A <em>profile</em> is a named logical grouping that may be activated
  * programmatically via {@link ConfigurableEnvironment#setActiveProfiles} or declaratively
@@ -37,6 +34,12 @@ import org.springframework.core.env.Profiles;
  * environment variable, or as a Servlet context parameter in {@code web.xml}
  * for web applications. Profiles may also be activated declaratively in
  * integration tests via the {@code @ActiveProfiles} annotation.
+ *
+ * <em> profile <em>是一个命名的逻辑组，可以通过{@link ConfigurableEnvironment#setActiveProfiles}以编程方式激活，
+ * 也可以通过将{@link AbstractEnvironment#ACTIVE_PROFILES_PROPERTY_NAME spring.profiles.active}属性设置为JVM系统属性，作为环境变量来声明性地激活，
+ * 或作为Web应用程序的{@code web.xml}中的Servlet上下文参数。
+ * 还可以通过{@code @ActiveProfiles}注解 在集成测试中声明性地激活配置文件。
+ *
  *
  * <p>The {@code @Profile} annotation may be used in any of the following ways:
  * <ul>
@@ -88,13 +91,13 @@ import org.springframework.core.env.Profiles;
  * @author Chris Beams
  * @author Phillip Webb
  * @author Sam Brannen
- * @since 3.1
  * @see ConfigurableEnvironment#setActiveProfiles
  * @see ConfigurableEnvironment#setDefaultProfiles
  * @see AbstractEnvironment#ACTIVE_PROFILES_PROPERTY_NAME
  * @see AbstractEnvironment#DEFAULT_PROFILES_PROPERTY_NAME
  * @see Conditional
  * @see org.springframework.test.context.ActiveProfiles
+ * @since 3.1
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

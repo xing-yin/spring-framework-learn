@@ -21,6 +21,10 @@ package org.springframework.core.env;
  * Models two key aspects of the application environment: <em>profiles</em> and
  * <em>properties</em>. Methods related to property access are exposed via the
  * {@link PropertyResolver} superinterface.
+ * <p>
+ * 表示当前应用程序正在其中运行的环境的接口。
+ * 为应用程序环境的两个关键方面建模：profiles 和 properties。
+ * 与属性访问有关的方法是通过{@link PropertyResolver}超类接口暴露的。
  *
  * <p>A <em>profile</em> is a named, logical group of bean definitions to be registered
  * with the container only if the given profile is <em>active</em>. Beans may be assigned
@@ -38,9 +42,15 @@ package org.springframework.core.env;
  * provide the user with a convenient service interface for configuring property sources
  * and resolving properties from them.
  *
+ * <em>属性<em>在几乎所有应用程序中都起着重要作用，并且可能源自多种来源：属性文件，JVM系统属性，系统环境变量，JNDI，servlet上下文参数，临时属性对象，Maps等。
+ * 环境对象与属性有关的作用是为用户提供方便的服务接口，用于配置属性源并从中解析属性。
+ *
  * <p>Beans managed within an {@code ApplicationContext} may register to be {@link
  * org.springframework.context.EnvironmentAware EnvironmentAware} or {@code @Inject} the
  * {@code Environment} in order to query profile state or resolve properties directly.
+ * <p>
+ * 在{@code ApplicationContext}中管理的Bean可以注册为{@link org.springframework.context.EnvironmentAware EnvironmentAware}
+ * 或{@code @Inject} {@code Environment}，以便查询配置文件状态或直接解析属性。
  *
  * <p>In most cases, however, application-level beans should not need to interact with the
  * {@code Environment} directly but instead may have to have {@code ${...}} property
@@ -49,15 +59,22 @@ package org.springframework.core.env;
  * PropertySourcesPlaceholderConfigurer}, which itself is {@code EnvironmentAware} and
  * as of Spring 3.1 is registered by default when using
  * {@code <context:property-placeholder/>}.
+ * <p>
+ * 但是，在大多数情况下，应用程序级Bean不应该直接与{@code Environment}进行交互，
+ * 但是而可能必须将{@code ${...}}属性值替换为{@link org.springframework.context.support.PropertySourcesPlaceholderConfigurer PropertySourcesPlaceholderConfigurer}
+ * 本身就是{@code EnvironmentAware}，从Spring 3.1开始，默认情况下使用{@code <context：property-placeholder>}注册。
  *
  * <p>Configuration of the environment object must be done through the
  * {@code ConfigurableEnvironment} interface, returned from all
  * {@code AbstractApplicationContext} subclass {@code getEnvironment()} methods. See
  * {@link ConfigurableEnvironment} Javadoc for usage examples demonstrating manipulation
  * of property sources prior to application context {@code refresh()}.
+ * <p>
+ * 必须通过从所有{@code AbstractApplicationContext}子类{@code getEnvironment（）}方法返回的{@code ConfigurableEnvironment}接口完成环境对象的配置。
+ * 有关示例，请参见{@link ConfigurableEnvironment} Javadoc，以演示在应用程序上下文之前对属性源进行操作的用法示例{@code refresh()}\
+ * (接口隔离接口: AB接口)
  *
  * @author Chris Beams
- * @since 3.1
  * @see PropertyResolver
  * @see EnvironmentCapable
  * @see ConfigurableEnvironment
@@ -67,6 +84,7 @@ package org.springframework.core.env;
  * @see org.springframework.context.ConfigurableApplicationContext#getEnvironment
  * @see org.springframework.context.ConfigurableApplicationContext#setEnvironment
  * @see org.springframework.context.support.AbstractApplicationContext#createEnvironment
+ * @since 3.1
  */
 public interface Environment extends PropertyResolver {
 
@@ -79,6 +97,7 @@ public interface Environment extends PropertyResolver {
 	 * {@link ConfigurableEnvironment#setActiveProfiles(String...)}.
 	 * <p>If no profiles have explicitly been specified as active, then any
 	 * {@linkplain #getDefaultProfiles() default profiles} will automatically be activated.
+	 *
 	 * @see #getDefaultProfiles
 	 * @see ConfigurableEnvironment#setActiveProfiles
 	 * @see AbstractEnvironment#ACTIVE_PROFILES_PROPERTY_NAME
@@ -88,6 +107,7 @@ public interface Environment extends PropertyResolver {
 	/**
 	 * Return the set of profiles to be active by default when no active profiles have
 	 * been set explicitly.
+	 *
 	 * @see #getActiveProfiles
 	 * @see ConfigurableEnvironment#setDefaultProfiles
 	 * @see AbstractEnvironment#DEFAULT_PROFILES_PROPERTY_NAME
@@ -101,8 +121,9 @@ public interface Environment extends PropertyResolver {
 	 * i.e. the method will return {@code true} if the given profile is <em>not</em> active.
 	 * For example, {@code env.acceptsProfiles("p1", "!p2")} will return {@code true} if
 	 * profile 'p1' is active or 'p2' is not active.
+	 *
 	 * @throws IllegalArgumentException if called with zero arguments
-	 * or if any profile is {@code null}, empty, or whitespace only
+	 *                                  or if any profile is {@code null}, empty, or whitespace only
 	 * @see #getActiveProfiles
 	 * @see #getDefaultProfiles
 	 * @see #acceptsProfiles(Profiles)

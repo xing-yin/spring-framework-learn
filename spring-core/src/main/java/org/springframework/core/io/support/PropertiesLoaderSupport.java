@@ -16,19 +16,18 @@
 
 package org.springframework.core.io.support;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.lang.Nullable;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.PropertiesPersister;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Properties;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.core.io.Resource;
-import org.springframework.lang.Nullable;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.PropertiesPersister;
 
 /**
  * Base class for JavaBean-style components that need to load properties
@@ -65,7 +64,7 @@ public abstract class PropertiesLoaderSupport {
 	 * loaded from files.
 	 */
 	public void setProperties(Properties properties) {
-		this.localProperties = new Properties[] {properties};
+			this.localProperties = new Properties[] {properties};
 	}
 
 	/**

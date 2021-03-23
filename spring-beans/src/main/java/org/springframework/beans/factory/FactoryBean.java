@@ -23,14 +23,20 @@ import org.springframework.lang.Nullable;
  * are themselves factories for individual objects. If a bean implements this
  * interface, it is used as a factory for an object to expose, not directly as a
  * bean instance that will be exposed itself.
+ * <p>
+ * 由{@link BeanFactory }中使用的对象实现的接口，这些对象本身就是单个对象的工厂。
+ * 如果Bean实现此接口，则它将用作暴露对象的工厂，而不是直接暴露自身作为的Bean实例。
  *
  * <p><b>NB: A bean that implements this interface cannot be used as a normal bean.</b>
  * A FactoryBean is defined in a bean style, but the object exposed for bean
  * references ({@link #getObject()}) is always the object that it creates.
+ * <p>
+ * 实现此接口的bean不能用作普通的 bean。FactoryBean定义了bean的样式，
+ * 但是暴露 bean 引用对象是始终通过（{@link getObject（）}）方法来创建。
  *
  * <p>FactoryBeans can support singletons and prototypes, and can either create
  * objects lazily on demand or eagerly on startup. The {@link SmartFactoryBean}
- * interface allows for exposing more fine-grained behavioral metadata.
+ * interface allows for exposing more fine-grained behavioral metadata(细粒度的行为元数据).
  *
  * <p>This interface is heavily used within the framework itself, for example for
  * the AOP {@link org.springframework.aop.framework.ProxyFactoryBean} or the
@@ -42,6 +48,11 @@ import org.springframework.lang.Nullable;
  * {@link #getObjectType()} {@link #getObject()} invocations may arrive early in the
  * bootstrap process, even ahead of any post-processor setup. If you need access to
  * other beans, implement {@link BeanFactoryAware} and obtain them programmatically.
+ * <p>
+ * {@code FactoryBean}是编程约定。实现不应依赖于注释驱动的注入或其他反射性工具。
+ * <b> {@link getObjectType（）} {@link getObject（）}调用在启动过程中可能会提前使用，甚至在任何后置处理器设置之前也是如此。
+ * <p>
+ * 如果您需要访问其他bean，请实现{@link BeanFactoryAware}并以编程方式获取它们。
  *
  * <p><b>The container is only responsible for managing the lifecycle of the FactoryBean
  * instance, not the lifecycle of the objects created by the FactoryBean.</b> Therefore,
@@ -53,14 +64,18 @@ import org.springframework.lang.Nullable;
  * synchronization of bean creation. There is usually no need for internal
  * synchronization other than for purposes of lazy initialization within the
  * FactoryBean itself (or the like).
+ * <p>
+ * 最后，FactoryBean对象参与包含 BeanFactory 的 Bean 创建同步。
+ * 除了出于 FactoryBean 自身（或类似方式）内部的延迟初始化的目的之外，通常不需要内部同步。
+ * (容器本身保证同步)
  *
+ * @param <T> the bean type
  * @author Rod Johnson
  * @author Juergen Hoeller
- * @since 08.03.2003
- * @param <T> the bean type
  * @see org.springframework.beans.factory.BeanFactory
  * @see org.springframework.aop.framework.ProxyFactoryBean
  * @see org.springframework.jndi.JndiObjectFactoryBean
+ * @since 08.03.2003
  */
 public interface FactoryBean<T> {
 
@@ -70,6 +85,7 @@ public interface FactoryBean<T> {
 	 * {@link org.springframework.beans.factory.config.BeanDefinition} so that
 	 * factory beans can signal their object type when it can't be deduced from
 	 * the factory bean class.
+	 *
 	 * @since 5.2
 	 */
 	String OBJECT_TYPE_ATTRIBUTE = "factoryBeanObjectType";
@@ -88,6 +104,7 @@ public interface FactoryBean<T> {
 	 * will not throw a FactoryBeanNotInitializedException in this case anymore.
 	 * FactoryBean implementations are encouraged to throw
 	 * FactoryBeanNotInitializedException themselves now, as appropriate.
+	 *
 	 * @return an instance of the bean (can be {@code null})
 	 * @throws Exception in case of creation errors
 	 * @see FactoryBeanNotInitializedException
@@ -110,6 +127,16 @@ public interface FactoryBean<T> {
 	 * <p><b>NOTE:</b> Autowiring will simply ignore FactoryBeans that return
 	 * {@code null} here. Therefore it is highly recommended to implement
 	 * this method properly, using the current state of the FactoryBean.
+	 * <p>
+	 * 返回此FactoryBean创建的对象的类型；如果事先未知，则返回{@code null}。
+	 * <p>这允许您在不实例化对象的情况下（例如在自动装配时）检查特定类型的bean。
+	 * <p>对于正在创建单例对象的实现，此方法应尽量避免创建单例。它应该提前预估类型。
+	 * 对于原型，建议在此处返回有意义的类型。
+	 * <p>在完全初始化此FactoryBean的<i>之前，可以将此方法称为<i>。
+	 * 它不必依赖初始化期间创建的状态。当然，如果可用，它仍然可以使用这种状态。
+	 * 注意：自动装配将仅忽略在此处返回{@code null}的FactoryBean。
+	 * 因此，强烈建议使用FactoryBean的当前状态正确实现此方法。
+	 *
 	 * @return the type of object that this FactoryBean creates,
 	 * or {@code null} if not known at the time of the call
 	 * @see ListableBeanFactory#getBeansOfType
@@ -138,6 +165,7 @@ public interface FactoryBean<T> {
 	 * {@code isSingleton()} implementation returns {@code false}.
 	 * <p>The default implementation returns {@code true}, since a
 	 * {@code FactoryBean} typically manages a singleton instance.
+	 *
 	 * @return whether the exposed object is a singleton
 	 * @see #getObject()
 	 * @see SmartFactoryBean#isPrototype()
