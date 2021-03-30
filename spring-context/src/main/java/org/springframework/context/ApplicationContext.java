@@ -27,11 +27,14 @@ import org.springframework.lang.Nullable;
  * Central interface to provide configuration for an application.
  * This is read-only while the application is running, but may be
  * reloaded if the implementation supports this.
+ * <p>
+ * 为应用程序提供配置的中心接口。
+ * 在应用程序运行时，它是只读的，但是如果实现支持，则可以重新加载。
  *
  * <p>An ApplicationContext provides:
  * <ul>
  * <li>Bean factory methods for accessing application components.
- * Inherited from {@link org.springframework.beans.factory.ListableBeanFactory}.
+ * Inherited(继承自) from {@link org.springframework.beans.factory.ListableBeanFactory}.
  * <li>The ability to load file resources in a generic fashion.
  * Inherited from the {@link org.springframework.core.io.ResourceLoader} interface.
  * <li>The ability to publish events to registered listeners.
@@ -42,12 +45,20 @@ import org.springframework.lang.Nullable;
  * will always take priority. This means, for example, that a single parent
  * context can be used by an entire web application, while each servlet has
  * its own child context that is independent of that of any other servlet.
+ * <p>
+ * 从父上下文继承。在子上下文中的定义将始终优先(即会覆盖父上下文中的定义)。
+ * 例如，这意味着整个Web应用程序都可以使用单个父上下文，
+ * 而每个Servlet都有其自己的子上下文，该子上下文独立于任何其他servlet的子上下文（即互相之间是隔离互不影响的）。
  * </ul>
  *
  * <p>In addition to standard {@link org.springframework.beans.factory.BeanFactory}
  * lifecycle capabilities, ApplicationContext implementations detect and invoke
  * {@link ApplicationContextAware} beans as well as {@link ResourceLoaderAware},
  * {@link ApplicationEventPublisherAware} and {@link MessageSourceAware} beans.
+ * <p>
+ * 除了{@link org.springframework.beans.factory.BeanFactory}标准的生命周期功能之外，
+ * ApplicationContext 实现了检测并调用{@link ApplicationContextAware} bean 以及{@link ResourceLoaderAware}，
+ * {@link ApplicationEventPublisherAware}和{@link MessageSourceAware } bean。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -55,11 +66,16 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.BeanFactory
  * @see org.springframework.core.io.ResourceLoader
  */
-public interface ApplicationContext extends EnvironmentCapable, ListableBeanFactory, HierarchicalBeanFactory,
-		MessageSource, ApplicationEventPublisher, ResourcePatternResolver {
+public interface ApplicationContext extends EnvironmentCapable,
+		ListableBeanFactory, // 继承于 BeanFactory
+		HierarchicalBeanFactory,// 继承于 BeanFactory
+		MessageSource,
+		ApplicationEventPublisher,
+		ResourcePatternResolver {
 
 	/**
 	 * Return the unique id of this application context.
+	 *
 	 * @return the unique id of the context, or {@code null} if none
 	 */
 	@Nullable
@@ -67,18 +83,21 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 
 	/**
 	 * Return a name for the deployed application that this context belongs to.
+	 *
 	 * @return a name for the deployed application, or the empty String by default
 	 */
 	String getApplicationName();
 
 	/**
 	 * Return a friendly name for this context.
+	 *
 	 * @return a display name for this context (never {@code null})
 	 */
 	String getDisplayName();
 
 	/**
 	 * Return the timestamp when this context was first loaded.
+	 *
 	 * @return the timestamp (ms) when this context was first loaded
 	 */
 	long getStartupDate();
@@ -86,6 +105,7 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	/**
 	 * Return the parent context, or {@code null} if there is no parent
 	 * and this is the root of the context hierarchy.
+	 *
 	 * @return the parent context, or {@code null} if there is no parent
 	 */
 	@Nullable
@@ -104,11 +124,12 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	 * after the application context has been closed.</b> In current Spring Framework
 	 * versions, only refreshable application contexts behave that way; as of 4.2,
 	 * all application context implementations will be required to comply.
+	 *
 	 * @return the AutowireCapableBeanFactory for this context
 	 * @throws IllegalStateException if the context does not support the
-	 * {@link AutowireCapableBeanFactory} interface, or does not hold an
-	 * autowire-capable bean factory yet (e.g. if {@code refresh()} has
-	 * never been called), or if the context has been closed already
+	 *                               {@link AutowireCapableBeanFactory} interface, or does not hold an
+	 *                               autowire-capable bean factory yet (e.g. if {@code refresh()} has
+	 *                               never been called), or if the context has been closed already
 	 * @see ConfigurableApplicationContext#refresh()
 	 * @see ConfigurableApplicationContext#getBeanFactory()
 	 */
