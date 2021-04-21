@@ -146,6 +146,7 @@ public interface BeanFactory {
 	 * beans <i>created</i> by the FactoryBean. For example, if the bean named
 	 * {@code myJndiObject} is a FactoryBean, getting {@code &myJndiObject}
 	 * will return the factory, not the instance returned by the factory.
+	 * <p>
 	 * & 获取到的是 factory(即工厂),不是bean
 	 */
 	String FACTORY_BEAN_PREFIX = "&";

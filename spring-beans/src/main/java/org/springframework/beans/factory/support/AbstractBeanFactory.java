@@ -431,7 +431,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 		RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 
-		// 对于 FactoryBean，如果不是间接引用，则返回已创建对象的单例状态。
+		// 3.对于 FactoryBean，如果不是间接引用(即 &)，则返回已创建对象的单例状态。
 		// In case of FactoryBean, return singleton status of created object if not a dereference.
 		if (mbd.isSingleton()) {
 			if (isFactoryBean(beanName, mbd)) {
