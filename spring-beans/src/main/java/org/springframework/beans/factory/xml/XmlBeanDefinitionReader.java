@@ -330,6 +330,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		// 从 encodedResource 中获取已经封装的 Resource 并再次从 Resource 中获取其中的 InputSource
+		// 从 encodedResource 中获取已经封装的 Resource 对象并再次从 Resource 中获取其中的 inputStream
 		try (InputStream inputStream = encodedResource.getResource().getInputStream()) {
 			InputSource inputSource = new InputSource(inputStream);
 			if (encodedResource.getEncoding() != null) {
@@ -444,7 +445,6 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	protected int getValidationModeForResource(Resource resource) {
 		int validationModeToUse = getValidationMode();
-		// 如果手动指定则使用指定模式
 		if (validationModeToUse != VALIDATION_AUTO) {
 			return validationModeToUse;
 		}

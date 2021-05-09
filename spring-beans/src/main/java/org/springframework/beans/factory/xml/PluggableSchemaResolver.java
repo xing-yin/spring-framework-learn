@@ -16,23 +16,22 @@
 
 package org.springframework.beans.factory.xml;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link EntityResolver} implementation that attempts to resolve schema URLs into
@@ -176,6 +175,7 @@ public class PluggableSchemaResolver implements EntityResolver {
 
 	@Override
 	public String toString() {
+		/// idea 在进行 debug 时会隐式的调用 toString 方法===> 所以可能会出现意料之外的现像（如这里懒加载的被提前触发）
 		return "EntityResolver using schema mappings " + getSchemaMappings();
 	}
 
