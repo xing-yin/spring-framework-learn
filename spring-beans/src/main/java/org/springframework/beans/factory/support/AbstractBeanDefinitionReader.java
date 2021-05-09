@@ -16,13 +16,8 @@
 
 package org.springframework.beans.factory.support;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
@@ -33,6 +28,10 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Abstract base class for bean definition readers which implement
@@ -53,6 +52,9 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
 
 	private final BeanDefinitionRegistry registry;
 
+	/**
+	 * 定义资源加载器，主要用于根据给定的资源文件地址返回对应的 Resource
+	 */
 	@Nullable
 	private ResourceLoader resourceLoader;
 

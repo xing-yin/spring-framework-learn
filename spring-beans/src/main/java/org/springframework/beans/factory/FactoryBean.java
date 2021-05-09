@@ -24,15 +24,16 @@ import org.springframework.lang.Nullable;
  * interface, it is used as a factory for an object to expose, not directly as a
  * bean instance that will be exposed itself.
  * <p>
- * 由{@link BeanFactory }中使用的对象实现的接口，这些对象本身就是单个对象的工厂。
+ * 由在{@link BeanFactory }中使用的对象来实现的接口，这些对象本身就是单个对象的工厂。
  * 如果Bean实现此接口，则它将用作暴露对象的工厂，而不是直接暴露自身作为的Bean实例。
+ * (也就是使用工厂来生产Bean，而不是直接使用 Bean 本身)
  *
  * <p><b>NB: A bean that implements this interface cannot be used as a normal bean.</b>
  * A FactoryBean is defined in a bean style, but the object exposed for bean
  * references ({@link #getObject()}) is always the object that it creates.
  * <p>
- * 实现此接口的bean不能用作普通的 bean。FactoryBean定义了bean的样式，
- * 但是暴露 bean 引用对象是始终通过（{@link getObject（）}）方法来创建。
+ * 实现此接口的bean不能用作普通的 bean。FactoryBean 定义了bean的样式，
+ * 但是暴露 bean 引用对象是始终通过（{@link getObject()}）方法来创建。
  *
  * <p>FactoryBeans can support singletons and prototypes, and can either create
  * objects lazily on demand or eagerly on startup. The {@link SmartFactoryBean}
@@ -49,8 +50,8 @@ import org.springframework.lang.Nullable;
  * bootstrap process, even ahead of any post-processor setup. If you need access to
  * other beans, implement {@link BeanFactoryAware} and obtain them programmatically.
  * <p>
- * {@code FactoryBean}是编程约定。实现不应依赖于注释驱动的注入或其他反射性工具。
- * <b> {@link getObjectType（）} {@link getObject（）}调用在启动过程中可能会提前使用，甚至在任何后置处理器设置之前也是如此。
+ * {@code FactoryBean}是编程约定。实现不支持依赖于注释驱动的注入或其他反射性工具。（也就是不能用注解来产生 FactoryBean）
+ * <b> {@link getObjectType()} {@link getObject()}调用在启动过程中可能会提前使用，甚至在任何后置处理器设置之前也是如此。
  * <p>
  * 如果您需要访问其他bean，请实现{@link BeanFactoryAware}并以编程方式获取它们。
  *
@@ -59,13 +60,14 @@ import org.springframework.lang.Nullable;
  * a destroy method on an exposed bean object (such as {@link java.io.Closeable#close()}
  * will <i>not</i> be called automatically. Instead, a FactoryBean should implement
  * {@link DisposableBean} and delegate any such close call to the underlying object.
+ * [注意]FactoryBean 创建的 Bean 的生命周期不会被容器管理
  *
  * <p>Finally, FactoryBean objects participate in the containing BeanFactory's
  * synchronization of bean creation. There is usually no need for internal
  * synchronization other than for purposes of lazy initialization within the
  * FactoryBean itself (or the like).
  * <p>
- * 最后，FactoryBean对象参与包含 BeanFactory 的 Bean 创建同步。
+ * 最后，FactoryBean 对象参与包含 BeanFactory 的 Bean 创建同步。
  * 除了出于 FactoryBean 自身（或类似方式）内部的延迟初始化的目的之外，通常不需要内部同步。
  * (容器本身保证同步)
  *
@@ -135,7 +137,7 @@ public interface FactoryBean<T> {
 	 * <p>在完全初始化此FactoryBean的<i>之前，可以将此方法称为<i>。
 	 * 它不必依赖初始化期间创建的状态。当然，如果可用，它仍然可以使用这种状态。
 	 * 注意：自动装配将仅忽略在此处返回{@code null}的FactoryBean。
-	 * 因此，强烈建议使用FactoryBean的当前状态正确实现此方法。
+	 * 因此，强烈建议使用 FactoryBean 的当前状态正确实现此方法。
 	 *
 	 * @return the type of object that this FactoryBean creates,
 	 * or {@code null} if not known at the time of the call

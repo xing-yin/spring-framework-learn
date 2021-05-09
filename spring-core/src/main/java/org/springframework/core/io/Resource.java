@@ -31,6 +31,7 @@ import java.nio.channels.ReadableByteChannel;
  * type of underlying resource, such as a file or class path resource.
  * <p>
  * 资源描述符的接口，该描述符从诸如文件或类路径资源之类的基础资源的实际类型中抽象出来
+ * >[idea]Spring 对资源实现的抽象结构
  *
  * <p>An InputStream can be opened for every resource if it exists in
  * physical form, but a URL or File handle can just be returned for
@@ -61,6 +62,7 @@ public interface Resource extends InputStreamSource {
 	 * <p>This method performs a definitive existence check, whereas the
 	 * existence of a {@code Resource} handle only guarantees a valid
 	 * descriptor handle.
+	 * > 存在性
 	 */
 	boolean exists();
 
@@ -72,6 +74,7 @@ public interface Resource extends InputStreamSource {
 	 * Note that actual content reading may still fail when attempted.
 	 * However, a value of {@code false} is a definitive indication
 	 * that the resource content cannot be read.
+	 * > 可读性
 	 *
 	 * @see #getInputStream()
 	 * @see #exists()
@@ -85,6 +88,7 @@ public interface Resource extends InputStreamSource {
 	 * If {@code true}, the InputStream cannot be read multiple times,
 	 * and must be read and closed to avoid resource leaks.
 	 * <p>Will be {@code false} for typical resource descriptors.
+	 * > 打开状态
 	 */
 	default boolean isOpen() {
 		return false;
@@ -185,6 +189,7 @@ public interface Resource extends InputStreamSource {
 	 * to be used for error output when working with the resource.
 	 * <p>Implementations are also encouraged to return this value
 	 * from their {@code toString} method.
+	 * > 当需要详细的打印出出错的资源文件时使用
 	 *
 	 * @see Object#toString()
 	 */

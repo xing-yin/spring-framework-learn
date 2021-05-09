@@ -16,15 +16,6 @@
 
 package org.springframework.beans.factory.support;
 
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Supplier;
-
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -32,6 +23,11 @@ import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+
+import java.lang.reflect.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * A root bean definition represents the merged bean definition that backs
@@ -60,7 +56,10 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	private AnnotatedElement qualifiedElement;
 
-	/** Determines if the definition needs to be re-merged. */
+	/**
+	 * Determines if the definition needs to be re-merged.
+	 * stale：陈旧的
+	 */
 	volatile boolean stale;
 
 	boolean allowCaching = true;
@@ -70,51 +69,77 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	volatile ResolvableType targetType;
 
-	/** Package-visible field for caching the determined Class of a given bean definition. */
+	/**
+	 * Package-visible field for caching the determined Class of a given bean definition.
+	 */
 	@Nullable
 	volatile Class<?> resolvedTargetType;
 
-	/** Package-visible field for caching if the bean is a factory bean. */
+	/**
+	 * Package-visible field for caching if the bean is a factory bean.
+	 */
 	@Nullable
 	volatile Boolean isFactoryBean;
 
-	/** Package-visible field for caching the return type of a generically typed factory method. */
+	/**
+	 * Package-visible field for caching the return type of a generically typed factory method.
+	 */
 	@Nullable
 	volatile ResolvableType factoryMethodReturnType;
 
-	/** Package-visible field for caching a unique factory method candidate for introspection. */
+	/**
+	 * Package-visible field for caching a unique factory method candidate for introspection.
+	 */
 	@Nullable
 	volatile Method factoryMethodToIntrospect;
 
-	/** Package-visible field for caching a resolved destroy method name (also for inferred). */
+	/**
+	 * Package-visible field for caching a resolved destroy method name (also for inferred).
+	 */
 	@Nullable
 	volatile String resolvedDestroyMethodName;
 
-	/** Common lock for the four constructor fields below. */
+	/**
+	 * Common lock for the four constructor fields below.
+	 */
 	final Object constructorArgumentLock = new Object();
 
-	/** Package-visible field for caching the resolved constructor or factory method. */
+	/**
+	 * Package-visible field for caching the resolved constructor or factory method.
+	 */
 	@Nullable
 	Executable resolvedConstructorOrFactoryMethod;
 
-	/** Package-visible field that marks the constructor arguments as resolved. */
+	/**
+	 * Package-visible field that marks the constructor arguments as resolved.
+	 */
 	boolean constructorArgumentsResolved = false;
 
-	/** Package-visible field for caching fully resolved constructor arguments. */
+	/**
+	 * Package-visible field for caching fully resolved constructor arguments.
+	 */
 	@Nullable
 	Object[] resolvedConstructorArguments;
 
-	/** Package-visible field for caching partly prepared constructor arguments. */
+	/**
+	 * Package-visible field for caching partly prepared constructor arguments.
+	 */
 	@Nullable
 	Object[] preparedConstructorArguments;
 
-	/** Common lock for the two post-processing fields below. */
+	/**
+	 * Common lock for the two post-processing fields below.
+	 */
 	final Object postProcessingLock = new Object();
 
-	/** Package-visible field that indicates MergedBeanDefinitionPostProcessor having been applied. */
+	/**
+	 * Package-visible field that indicates MergedBeanDefinitionPostProcessor having been applied.
+	 */
 	boolean postProcessed = false;
 
-	/** Package-visible field that indicates a before-instantiation post-processor having kicked in. */
+	/**
+	 * Package-visible field that indicates a before-instantiation post-processor having kicked in.
+	 */
 	@Nullable
 	volatile Boolean beforeInstantiationResolved;
 
@@ -131,6 +156,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Create a new RootBeanDefinition, to be configured through its bean
 	 * properties and configuration methods.
+	 *
 	 * @see #setBeanClass
 	 * @see #setScope
 	 * @see #setConstructorArgumentValues
@@ -142,6 +168,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Create a new RootBeanDefinition for a singleton.
+	 *
 	 * @param beanClass the class of the bean to instantiate
 	 * @see #setBeanClass
 	 */
@@ -153,11 +180,12 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Create a new RootBeanDefinition for a singleton bean, constructing each instance
 	 * through calling the given supplier (possibly a lambda or method reference).
-	 * @param beanClass the class of the bean to instantiate
+	 *
+	 * @param beanClass        the class of the bean to instantiate
 	 * @param instanceSupplier the supplier to construct a bean instance,
-	 * as an alternative to a declaratively specified factory method
-	 * @since 5.0
+	 *                         as an alternative to a declaratively specified factory method
 	 * @see #setInstanceSupplier
+	 * @since 5.0
 	 */
 	public <T> RootBeanDefinition(@Nullable Class<T> beanClass, @Nullable Supplier<T> instanceSupplier) {
 		super();
@@ -168,12 +196,13 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Create a new RootBeanDefinition for a scoped bean, constructing each instance
 	 * through calling the given supplier (possibly a lambda or method reference).
-	 * @param beanClass the class of the bean to instantiate
-	 * @param scope the name of the corresponding scope
+	 *
+	 * @param beanClass        the class of the bean to instantiate
+	 * @param scope            the name of the corresponding scope
 	 * @param instanceSupplier the supplier to construct a bean instance,
-	 * as an alternative to a declaratively specified factory method
-	 * @since 5.0
+	 *                         as an alternative to a declaratively specified factory method
 	 * @see #setInstanceSupplier
+	 * @since 5.0
 	 */
 	public <T> RootBeanDefinition(@Nullable Class<T> beanClass, String scope, @Nullable Supplier<T> instanceSupplier) {
 		super();
@@ -185,10 +214,11 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Create a new RootBeanDefinition for a singleton,
 	 * using the given autowire mode.
-	 * @param beanClass the class of the bean to instantiate
-	 * @param autowireMode by name or type, using the constants in this interface
+	 *
+	 * @param beanClass       the class of the bean to instantiate
+	 * @param autowireMode    by name or type, using the constants in this interface
 	 * @param dependencyCheck whether to perform a dependency check for objects
-	 * (not applicable to autowiring a constructor, thus ignored there)
+	 *                        (not applicable to autowiring a constructor, thus ignored there)
 	 */
 	public RootBeanDefinition(@Nullable Class<?> beanClass, int autowireMode, boolean dependencyCheck) {
 		super();
@@ -202,12 +232,13 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Create a new RootBeanDefinition for a singleton,
 	 * providing constructor arguments and property values.
+	 *
 	 * @param beanClass the class of the bean to instantiate
-	 * @param cargs the constructor argument values to apply
-	 * @param pvs the property values to apply
+	 * @param cargs     the constructor argument values to apply
+	 * @param pvs       the property values to apply
 	 */
 	public RootBeanDefinition(@Nullable Class<?> beanClass, @Nullable ConstructorArgumentValues cargs,
-			@Nullable MutablePropertyValues pvs) {
+							  @Nullable MutablePropertyValues pvs) {
 
 		super(cargs, pvs);
 		setBeanClass(beanClass);
@@ -217,6 +248,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 * Create a new RootBeanDefinition for a singleton,
 	 * providing constructor arguments and property values.
 	 * <p>Takes a bean class name to avoid eager loading of the bean class.
+	 *
 	 * @param beanClassName the name of the class to instantiate
 	 */
 	public RootBeanDefinition(String beanClassName) {
@@ -227,9 +259,10 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 * Create a new RootBeanDefinition for a singleton,
 	 * providing constructor arguments and property values.
 	 * <p>Takes a bean class name to avoid eager loading of the bean class.
+	 *
 	 * @param beanClassName the name of the class to instantiate
-	 * @param cargs the constructor argument values to apply
-	 * @param pvs the property values to apply
+	 * @param cargs         the constructor argument values to apply
+	 * @param pvs           the property values to apply
 	 */
 	public RootBeanDefinition(String beanClassName, ConstructorArgumentValues cargs, MutablePropertyValues pvs) {
 		super(cargs, pvs);
@@ -239,6 +272,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Create a new RootBeanDefinition as deep copy of the given
 	 * bean definition.
+	 *
 	 * @param original the original bean definition to copy from
 	 */
 	public RootBeanDefinition(RootBeanDefinition original) {
@@ -254,6 +288,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Create a new RootBeanDefinition as deep copy of the given
 	 * bean definition.
+	 *
 	 * @param original the original bean definition to copy from
 	 */
 	RootBeanDefinition(BeanDefinition original) {
@@ -291,9 +326,10 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Specify the {@link AnnotatedElement} defining qualifiers,
 	 * to be used instead of the target class or factory method.
-	 * @since 4.3.3
+	 *
 	 * @see #setTargetType(ResolvableType)
 	 * @see #getResolvedFactoryMethod()
+	 * @since 4.3.3
 	 */
 	public void setQualifiedElement(@Nullable AnnotatedElement qualifiedElement) {
 		this.qualifiedElement = qualifiedElement;
@@ -302,6 +338,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Return the {@link AnnotatedElement} defining qualifiers, if any.
 	 * Otherwise, the factory method and target class will be checked.
+	 *
 	 * @since 4.3.3
 	 */
 	@Nullable
@@ -311,6 +348,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Specify a generics-containing target type of this bean definition, if known in advance.
+	 *
 	 * @since 4.3.3
 	 */
 	public void setTargetType(ResolvableType targetType) {
@@ -319,6 +357,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Specify the target type of this bean definition, if known in advance.
+	 *
 	 * @since 3.2.2
 	 */
 	public void setTargetType(@Nullable Class<?> targetType) {
@@ -328,6 +367,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Return the target type of this bean definition, if known
 	 * (either specified in advance or resolved on first instantiation).
+	 *
 	 * @since 3.2.2
 	 */
 	@Nullable
@@ -344,10 +384,11 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 * either from runtime-cached type information or from configuration-time
 	 * {@link #setTargetType(ResolvableType)} or {@link #setBeanClass(Class)},
 	 * also considering resolved factory method definitions.
-	 * @since 5.1
+	 *
 	 * @see #setTargetType(ResolvableType)
 	 * @see #setBeanClass(Class)
 	 * @see #setResolvedFactoryMethod(Method)
+	 * @since 5.1
 	 */
 	@Override
 	public ResolvableType getResolvableType() {
@@ -369,6 +410,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Determine preferred constructors to use for default construction, if any.
 	 * Constructor arguments will be autowired if necessary.
+	 *
 	 * @return one or more preferred constructors, or {@code null} if none
 	 * (in which case the regular no-arg default constructor will be called)
 	 * @since 5.1
@@ -389,6 +431,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Specify a factory method name that refers to an overloaded method.
+	 *
 	 * @since 5.2
 	 */
 	public void setNonUniqueFactoryMethodName(String name) {
@@ -406,6 +449,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Set a resolved Java Method for the factory method on this bean definition.
+	 *
 	 * @param method the resolved factory method, or {@code null} to reset it
 	 * @since 5.2
 	 */
@@ -415,6 +459,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Return the resolved factory method as a Java Method object, if available.
+	 *
 	 * @return the factory method, or {@code null} if not found or not resolved yet
 	 */
 	@Nullable

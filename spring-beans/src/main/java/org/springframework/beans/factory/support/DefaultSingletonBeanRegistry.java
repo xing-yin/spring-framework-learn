@@ -27,11 +27,12 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * /// todo
  * Generic registry for shared bean instances, implementing the
  * {@link org.springframework.beans.factory.config.SingletonBeanRegistry}.
  * Allows for registering singleton instances that should be shared
  * for all callers of the registry, to be obtained via bean name.
+ * <p>
+ * >[idea]对接口 SingletonBeanRegistry 各个方法实现
  *
  * <p>Also supports registration of
  * {@link org.springframework.beans.factory.DisposableBean} instances,
@@ -164,7 +165,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
-	 *  todo 循环依赖核心方法
+	 * todo 循环依赖核心方法
 	 * Add the given singleton factory for building the specified singleton
 	 * if necessary.
 	 * <p>To be called for eager registration of singletons, e.g. to be able to

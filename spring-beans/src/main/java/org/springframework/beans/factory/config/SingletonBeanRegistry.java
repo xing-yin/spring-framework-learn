@@ -26,6 +26,7 @@ import org.springframework.lang.Nullable;
  * <p>
  * 为共享 bean 实例定义的注册表的接口。（单例对象注册中心）
  * 可以通过{@link org.springframework.beans.factory.BeanFactory}实现类来实现，以便用统一的方式公开其单例管理功能。
+ * >[idea]实现对单例的注册与获取
  *
  * <p>The {@link ConfigurableBeanFactory} interface extends this interface.
  *

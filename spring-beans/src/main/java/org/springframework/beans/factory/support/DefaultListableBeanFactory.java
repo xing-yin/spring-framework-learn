@@ -45,6 +45,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
+ * 【core-class】
  * Spring's default implementation of the {@link ConfigurableListableBeanFactory}
  * and {@link BeanDefinitionRegistry} interfaces: a full-fledged bean factory
  * based on bean definition metadata, extensible through post-processors.
@@ -979,6 +980,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				// 注册前的最后一次校验，这里的校验不同于之前的 XML 文件校验
+				// 主要是对于 AbstractBeanDefinition 是否与工厂方法属性中的 methodOverrides 校验
+				// 校验 methodOverrides 是否与工厂方法并存或 methodOverrides 对应的方法根本不存在
 				((AbstractBeanDefinition) beanDefinition).validate();
 			} catch (BeanDefinitionValidationException ex) {
 				throw new BeanDefinitionStoreException(beanDefinition.getResourceDescription(), beanName,
@@ -988,6 +992,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 		if (existingDefinition != null) {
+			// 如果已经注册且不允许覆盖，则抛出异常
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			} else if (existingDefinition.getRole() < beanDefinition.getRole()) {
@@ -1032,6 +1037,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		if (existingDefinition != null || containsSingleton(beanName)) {
+			// 重置所有的 beanName 对应的缓存
 			resetBeanDefinition(beanName);
 		} else if (isConfigurationFrozen()) {
 			clearByTypeCache();

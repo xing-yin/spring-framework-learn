@@ -56,7 +56,6 @@ public class XmlBeanFactory extends DefaultListableBeanFactory {
 
 	private final XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(this);
 
-
 	/**
 	 * Create a new XmlBeanFactory with the given resource,
 	 * which must be parsable using DOM.
@@ -75,7 +74,7 @@ public class XmlBeanFactory extends DefaultListableBeanFactory {
 	 * @throws BeansException in case of loading or parsing errors
 	 */
 	public XmlBeanFactory(Resource resource, BeanFactory parentBeanFactory) throws BeansException {
-		super(parentBeanFactory);
+		super(parentBeanFactory);// 查看父类
 		this.reader.loadBeanDefinitions(resource);
 	}
 
