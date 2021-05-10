@@ -19,6 +19,7 @@ package org.springframework.beans.factory;
 import org.springframework.lang.Nullable;
 
 /**
+ * [core]
  * Interface to be implemented by objects used within a {@link BeanFactory} which
  * are themselves factories for individual objects. If a bean implements this
  * interface, it is used as a factory for an object to expose, not directly as a
@@ -32,7 +33,7 @@ import org.springframework.lang.Nullable;
  * A FactoryBean is defined in a bean style, but the object exposed for bean
  * references ({@link #getObject()}) is always the object that it creates.
  * <p>
- * 实现此接口的bean不能用作普通的 bean。FactoryBean 定义了bean的样式，
+ * 实现此接口的bean不能用作普通的 bean。FactoryBean 定义了 bean 的样式，
  * 但是暴露 bean 引用对象是始终通过（{@link getObject()}）方法来创建。
  *
  * <p>FactoryBeans can support singletons and prototypes, and can either create

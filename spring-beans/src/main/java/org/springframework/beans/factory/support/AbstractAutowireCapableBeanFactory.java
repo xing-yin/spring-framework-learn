@@ -463,12 +463,16 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Make sure bean class is actually resolved at this point, and
 		// clone the bean definition in case of a dynamically resolved Class
 		// which cannot be stored in the shared merged bean definition.
+		// 锁定class,根据设置的 class 属性或者根据 className 来解析 Class
+		// Spring 配置中的 lookup-method 和 replace-method，两者统一存放在 BeanDefinition 的 methodOverrides 属性中
 		Class<?> resolvedClass = resolveBeanClass(mbd, beanName);
 		if (resolvedClass != null && !mbd.hasBeanClass() && mbd.getBeanClassName() != null) {
 			mbdToUse = new RootBeanDefinition(mbd);
 			mbdToUse.setBeanClass(resolvedClass);
 		}
 
+		// 验证及准备覆盖的方法：如果检测到 BeanDefinition 的 methodOverrides 属性存在（lookup-method 和 replace-method ），
+		//会动态为当前 bean 生成代理并使用对应的拦截器为 bean 做增强处理
 		// Prepare method overrides.
 		try {
 			mbdToUse.prepareMethodOverrides();
@@ -478,8 +482,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		try {
+			// 给 BeanPostProcessors 一个机会返回代理来代替真正的实例(应用 BeanPostProcessor#postProcessBeforeInstantiation)
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
+			// todo 关键的短路判断（AOP 功能就是基于这里的判断！）前置处理不为空则直接短路返回
 			if (bean != null) {
 				return bean;
 			}
@@ -1070,6 +1076,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	@Nullable
 	protected Object resolveBeforeInstantiation(String beanName, RootBeanDefinition mbd) {
 		Object bean = null;
+		// 如果尚未被解析
 		if (!Boolean.FALSE.equals(mbd.beforeInstantiationResolved)) {
 			// Make sure bean class is actually resolved at this point.
 			if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
@@ -1885,6 +1892,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	@Override
 	protected Object postProcessObjectFromFactoryBean(Object object, String beanName) {
+		// 初始化后尽可能保证所有 bean 初始化后都会调用注册的 BeanPostProcessor 的 postProcessAfterInitialization 方法进行处理
 		return applyBeanPostProcessorsAfterInitialization(object, beanName);
 	}
 
