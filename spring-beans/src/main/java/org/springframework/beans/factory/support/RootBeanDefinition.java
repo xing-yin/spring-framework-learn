@@ -71,6 +71,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Package-visible field for caching the determined Class of a given bean definition.
+	 * 包可见的字段，用于缓存给定 bean 定义的确定的 Class。
 	 */
 	@Nullable
 	volatile Class<?> resolvedTargetType;
@@ -106,12 +107,14 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Package-visible field for caching the resolved constructor or factory method.
+	 * 用于缓存的构造函数或工厂方法解析的包可见字段。
 	 */
 	@Nullable
 	Executable resolvedConstructorOrFactoryMethod;
 
 	/**
 	 * Package-visible field that marks the constructor arguments as resolved.
+	 * 包可见的字段，用于标记构造函数参数为已解析。
 	 */
 	boolean constructorArgumentsResolved = false;
 
@@ -123,6 +126,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 
 	/**
 	 * Package-visible field for caching partly prepared constructor arguments.
+	 * 包可见的字段，用于缓存部分准备好的构造函数参数。
 	 */
 	@Nullable
 	Object[] preparedConstructorArguments;

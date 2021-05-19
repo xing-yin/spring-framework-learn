@@ -1932,7 +1932,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/**
 	 * Add the given bean to the list of disposable beans in this factory,
 	 * registering its DisposableBean interface and/or the given destroy method
-	 * to be called on factory shutdown (if applicable). Only applies to singletons.
+	 * to be called on factory shutdown (if applicable（适用的）). Only applies to singletons.
 	 *
 	 * @param beanName the name of the bean
 	 * @param bean     the bean instance
@@ -1952,6 +1952,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				registerDisposableBean(beanName, new DisposableBeanAdapter(
 						bean, beanName, mbd, getBeanPostProcessorCache().destructionAware, acc));
 			} else {
+				//自定义 scope 处理
 				// A bean with a custom scope...
 				Scope scope = this.scopes.get(mbd.getScope());
 				if (scope == null) {
